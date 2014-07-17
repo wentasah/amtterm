@@ -54,7 +54,6 @@ struct redir {
 	
 	/* IDE redirection */
 	unsigned char cd[255];
-	unsigned char fd[255];
 };
 
 struct __attribute__ ((__packed__)) controls_from_host_message {
@@ -93,4 +92,3 @@ unsigned char * send_data(struct redir *r,unsigned char *request, int * len);
 int check_images(struct redir *r);
 
 FILE *fileCD;
-FILE *fileFD;

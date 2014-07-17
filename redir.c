@@ -422,33 +422,30 @@ int get_counter(void){
 	return counter-1;
 }
 char* put_file_size(char *request, int len, bool fileType,int blocksize){
-	FILE *file;
-	if (fileType==0) file=fileFD;
-	else file=fileCD;
-	
-	fseek(file,0,SEEK_END);
-	int fileLen=ftell(file)/blocksize-1;
+	int fileLen;
+	if (fileType==0)
+		fileLen = 0;
+	else {
+		fseek(fileCD,0,SEEK_END);
+		fileLen=ftell(fileCD)/blocksize-1;
+	}
 	memcpy(&request[34], &fileLen, 4);
 	return request;
 }
 char *  load_data_iso(char *request, int len, int part, bool fileType){
-	FILE *file;
-	if (fileType==0) file=fileFD;
-	else file=fileCD;
-	
-	fseek(file,  part*IDER_DATA_SIZE,0);
+	fseek(fileCD,  part*IDER_DATA_SIZE,0);
 
 	//Allocate memory
 	request=(char *)realloc(request,len+IDER_DATA_HEADER_LEN);
 	if (!request)
 	{
 		fprintf(stderr, "Memory error!");
-        fclose(file);
+        fclose(fileCD);
 		return 0;
 	}
 
 	//Read file contents into buffer
-	if (fread(request+IDER_DATA_HEADER_LEN, 1,len, file)!=len) return (char *)0;
+	if (fread(request+IDER_DATA_HEADER_LEN, 1,len, fileCD)!=len) return (char *)0;
 	
 	return request;
 

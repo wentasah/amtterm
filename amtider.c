@@ -27,8 +27,7 @@ static void usage(FILE *fp)
             "   -q            quiet\n"
             "   -u user       username (default: admin)\n"
             "   -p pass       password (default: $AMT_PASSWORD)\n"
-			"   -c path       path to *.iso image of redirected CD\n"
-			"   -f path       path to *.img image of redirected FD\n"
+            "   -c path       path to *.iso image of redirected CD\n"
             "\n"
             "By default port 16994 is used.\n"
 	    "If no password is given " APPNAME " will ask for one.\n"
@@ -114,13 +113,11 @@ static int redir_loop(struct redir *r)
 }
 int check_images(struct redir *r){
 	fileCD = fopen(r->cd, "rb");
-	fileFD = fopen(r->fd, "rb");
-	if (fileCD==0||fileFD==0){
+	if (fileCD==0) {
 		return -1;
 	}
 	fseek ( fileCD , 0 , SEEK_END );
-	fseek ( fileFD , 0 , SEEK_END );
-	if( ftell(fileCD)<IDER_MAX_DATA_SIZE || ftell(fileFD)<IDER_MAX_DATA_SIZE){
+	if( ftell(fileCD)<IDER_MAX_DATA_SIZE){
 		return -1;
 	}
 	return 0;
@@ -165,10 +162,6 @@ int main(int argc, char *argv[])
 	case 'c':
 	    snprintf(r.cd, sizeof(r.cd), "%s", optarg);
 	    break;
-	case 'f':
-	    snprintf(r.fd, sizeof(r.fd), "%s", optarg);
-	    break;	
-		
 	case 'h':
 		usage(stdout);
 		exit(0);
